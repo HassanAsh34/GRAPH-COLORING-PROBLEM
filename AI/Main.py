@@ -1,62 +1,65 @@
-import copy
+
 import random
 import time
 
-import networkx as nx
-import matplotlib.pyplot as plt
+
 import matplotlib.colors as colorlib
 
-def coloring(solution,lcolor,i,lnodes):
-    if i == len(lnodes):
-        solution.append([node.color for node in lnodes])
-        return
-        # fillColor(node[0],lcolor)
-    node = lnodes[i]
-    for color in lcolor:
-        if(node.isSafe(color)):
-            node.color = color
-            coloring(solution,lcolor,i+1,lnodes)
-            node.color = "" #for backtracking
+import Node as n
 
-def coloringWithCanonicalOrder(solution,solsorted,lcolor,i,lnodes):
-    if i == len(lnodes):
-        sol = [node.color for node in lnodes]
-        sortedsol = sorted(sol)
-        # res =
-        solsorted_set = set()
-        if tuple(sortedsol) not in solsorted_set:
-            solution.append(sol)
-            solsorted_set.add(tuple(sortedsol))
-        return
-    if len(solution) >= 5000:
-        return
-        # fillColor(node[0],lcolor)
-    node = lnodes[i]
-    for cid, color in enumerate(lcolor):
-        if(node.isSafeCanonical(cid)):
-            node.color = cid
-            coloringWithCanonicalOrder(solution,solsorted,lcolor,i+1,lnodes)
-            node.color = -1 #for backtracking
+import BackTracking as b
 
-def getSolutions(lnodes,lcolor):
-    Solutions = list()
-    solsorted = list()
-    nodes = copy.deepcopy(lnodes)
-    # for c in lcolor:
-        # nodes[0].color = c
-        # solution = list()
-    coloringWithCanonicalOrder(solution=Solutions,solsorted=solsorted, lcolor=lcolor, lnodes=nodes, i=0)
-        # Solutions.append((c,solution))
-    return Solutions
-
-
-def evaluateSolutions(solutions):
-    evaluatedSols= list()
-    for sol in solutions:
-        chromaticnum = len(set(sol))
-        evaluatedSols.append((chromaticnum,sol))
-    evaluatedSols.sort(key= lambda x: x[0])
-    return evaluatedSols
+# # def coloring(solution,lcolor,i,lnodes):
+# #     if i == len(lnodes):
+# #         solution.append([node.color for node in lnodes])
+# #         return
+# #         # fillColor(node[0],lcolor)
+# #     node = lnodes[i]
+# #     for color in lcolor:
+# #         if(node.isSafe(color)):
+# #             node.color = color
+# #             coloring(solution,lcolor,i+1,lnodes)
+# #             node.color = "" #for backtracking
+#
+# def coloringWithCanonicalOrder(solution,solsorted_set,lcolor,i,lnodes):
+#     if i == len(lnodes):
+#         sol = [node.color for node in lnodes]
+#         sortedsol = sorted(sol)
+#         # res =
+#
+#         if tuple(sortedsol) not in solsorted_set:
+#             solution.append(sol)
+#             solsorted_set.add(tuple(sortedsol))
+#         return
+#     if len(solution) >= 5000:
+#         return
+#         # fillColor(node[0],lcolor)
+#     node = lnodes[i]
+#     for cid, color in enumerate(lcolor):
+#         if(node.isSafeCanonical(cid)):
+#             node.color = cid
+#             coloringWithCanonicalOrder(solution,solsorted_set,lcolor,i+1,lnodes)
+#             node.color = -1 #for backtracking
+#
+# def getSolutions(lnodes,lcolor):
+#     Solutions = list()
+#     solsorted_set = set()
+#     nodes = copy.deepcopy(lnodes)
+#     # for c in lcolor:
+#         # nodes[0].color = c
+#         # solution = list()
+#     coloringWithCanonicalOrder(solution=Solutions,solsorted_set= solsorted_set,lcolor=lcolor, lnodes=nodes, i=0)
+#         # Solutions.append((c,solution))
+#     return Solutions
+#
+#
+# def evaluateSolutions(solutions):
+#     evaluatedSols= list()
+#     for sol in solutions:
+#         chromaticnum = len(set(sol))
+#         evaluatedSols.append((chromaticnum,sol))
+#     evaluatedSols.sort(key= lambda x: x[0])
+#     return evaluatedSols
 
 
 # def fillColor(node,lcolor):
@@ -74,88 +77,88 @@ def evaluateSolutions(solutions):
 
 
 
-def printGraph(g,optimal,colors):
-    pos = nx.spring_layout(g)
-    edge_labels = {(u, v): f"{u}-{v}" for u, v in g.edges}
-    # if
-    if optimal != None:
-        optimal = random.choice(optimal)
-        color = []
-        for i in optimal:
-            color.append(colors[i])
-        nx.draw(g,node_color= color, pos=pos, with_labels=True, node_size=800, font_weight="bold")
+# def printGraph(g,optimal,colors):
+#     pos = nx.spring_layout(g)
+#     edge_labels = {(u, v): f"{u}-{v}" for u, v in g.edges}
+#     # if
+#     if optimal != None:
+#         optimal = random.choice(optimal)
+#         color = []
+#         for i in optimal:
+#             color.append(colors[i])
+#         nx.draw(g,node_color= color, pos=pos, with_labels=True, node_size=800, font_weight="bold")
+#
+#
+#     else:
+#         nx.draw(g,pos=pos, with_labels=True, node_size=800, font_weight="bold")
+#
+#     if edge_labels.items():
+#         print(edge_labels)
+#         nx.draw_networkx_edge_labels(g,pos=pos,edge_labels=edge_labels)
+#     plt.show()
+#
+# def addEdges(g,nodes,edges):
+#     try:
+#         a, b = map(int, edges.split())
+#         if a in g.nodes and b in g.nodes:
+#             t = tuple(sorted((a,b)))
+#             if t in g.edges:
+#                 print("edge already exists")
+#             else:
+#                 g.add_edge(a, b)
+#                 n1 = n2  = None
+#                 for node in nodes:
+#                     if(node.Id == a or node.Id == b):
+#                         if n1 == None:
+#                             n1 = node
+#                         elif n2 == None and n1 != None:
+#                             n2 = node
+#                         else:
+#                             continue
+#                 if n1 is not None and n2 is not None:
+#                     if isinstance(n1, Node) and isinstance(n2, Node):
+#                         n1.addEdge(n2)
+#                         n2.addEdge(n1)
+#                         print(f"Connected node {n1.Id} with {n2.Id}")
+#                     else:
+#                         print("Something went wrong with IDs or node lookup.")
+#                 else:
+#                     print("something gone wrong with ids")
+#         else:
+#             print("Invalid node IDs.")
+#     except ValueError:
+#         print("Enter two numbers separated by a space.")
 
-
-    else:
-        nx.draw(g,pos=pos, with_labels=True, node_size=800, font_weight="bold")
-
-    if edge_labels.items():
-        print(edge_labels)
-        nx.draw_networkx_edge_labels(g,pos=pos,edge_labels=edge_labels)
-    plt.show()
-
-def addEdges(g,nodes,edges):
-    try:
-        a, b = map(int, edges.split())
-        if a in g.nodes and b in g.nodes:
-            t = tuple(sorted((a,b)))
-            if t in g.edges:
-                print("edge already exists")
-            else:
-                g.add_edge(a, b)
-                n1 = n2  = None
-                for node in nodes:
-                    if(node.Id == a or node.Id == b):
-                        if n1 == None:
-                            n1 = node
-                        elif n2 == None and n1 != None:
-                            n2 = node
-                        else:
-                            continue
-                if n1 is not None and n2 is not None:
-                    if isinstance(n1, Node) and isinstance(n2, Node):
-                        n1.addEdge(n2)
-                        n2.addEdge(n1)
-                        print(f"Connected node {n1.Id} with {n2.Id}")
-                    else:
-                        print("Something went wrong with IDs or node lookup.")
-                else:
-                    print("something gone wrong with ids")
-        else:
-            print("Invalid node IDs.")
-    except ValueError:
-        print("Enter two numbers separated by a space.")
-
-class Node:
-    _counter = 0
-
-    def __init__(self,):
-        Node._counter +=1
-        self.Id = Node._counter
-        self.edges = []
-        # self.color = ""
-        self.color = -1
-    def addEdge(self,node):
-        self.edges.append(node)
-        # shape = "Circle"
-    def isSafe(self,color):
-        for node in self.edges:
-            if(color.lower() == node.color.lower()):
-                return False
-        return True
-
-    def isSafeCanonical(self,color):
-        for node in self.edges:
-            if(color == node.color):
-                return False
-        return True
-
-
-
+# class Node:
+#     _counter = 0
+#
+#     def __init__(self,):
+#         Node._counter +=1
+#         self.Id = Node._counter
+#         self.edges = []
+#         # self.color = ""
+#         self.color = -1
+#     def addEdge(self,node):
+#         self.edges.append(node)
+#         # shape = "Circle"
+#     def isSafe(self,color):
+#         for node in self.edges:
+#             if(color.lower() == node.color.lower()):
+#                 return False
+#         return True
+#
+#     def isSafeCanonical(self,color):
+#         for node in self.edges:
+#             if(color == node.color):
+#                 return False
+#         return True
 
 
 
-g = nx.Graph()
+
+
+
+g = n.nx.Graph()
 
 nodes = list()
 
@@ -175,7 +178,7 @@ optimal = None
 print(colors)
 
 for i in range(nodesCount):
-    node = Node()
+    node = n.Node()
     nodes.append(node)
     g.add_node(node.Id)
 
@@ -193,20 +196,20 @@ while True:
         print("invalid operation")
 
     if (op == 1):
-            printGraph(g,optimal,colors)
+            n.printGraph(g,optimal,colors)
     elif (op == 2):
-        edge_input = input("Enter two nodes to connect (e.g. 1 2), or 'done' to finish: ")
+        edge_input = ""
         while edge_input.lower().strip() != "done":
             edge_input = input("Enter two nodes to connect (e.g. 1 2), or 'done' to finish: ")
             if edge_input.lower().strip() != "done":
-                addEdges(g, nodes, edge_input)
+                n.addEdges(g, nodes, edge_input)
     elif (op == 3):
-        node = Node()
+        node = n.Node()
         nodes.append(node)
         optimal = None
         g.add_node(node.Id)
     elif(op == 4):
-        solutions = getSolutions(lnodes=nodes,lcolor=colors)
+        solutions = b.getSolutions(lnodes=nodes,lcolor=colors)
         if not solutions:
             print("current number of colors is insufficient")
             addcolor = input("do yo want to add a new color? y/n")
@@ -218,7 +221,7 @@ while True:
         else:
             # print(solutions)
             start = time.time()
-            evsols = evaluateSolutions(solutions)
+            evsols = b.evaluateSolutions(solutions)
             minnum = evsols[0][0]
             print(evsols)
             optimal = [sols for cnum, sols in evsols if cnum == minnum ]
